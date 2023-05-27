@@ -138,8 +138,35 @@ function moveBall() {
         ) {
           ball.dy *= -1; // To bounce when the ball heats the brick
           brick.visible = false;
+
+          increaseScore();
         }
       }
+    });
+  });
+
+  // Hiit bottom wll - Lose
+  if (ball.y + ball.size > canvas.height) {
+    showAllBricks();
+
+    score = 0;
+  }
+}
+
+// Increarse score
+function increaseScore() {
+  score++;
+
+  if (score % (brickRowCount * brickRowCount) === 0) {
+    showAllBricks();
+  }
+}
+
+// Make all bricks appear
+function showAllBricks() {
+  bricks.forEach((column) => {
+    column.forEach((brick) => {
+      brick.visible = true;
     });
   });
 }
