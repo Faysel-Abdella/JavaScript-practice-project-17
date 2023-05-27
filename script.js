@@ -6,6 +6,8 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d"); // convention to use ctx
 
 let score = 0;
+const brickRowCount = 9;
+const brickColumnCount = 5;
 
 // Create ball properties
 const ball = {
@@ -27,6 +29,28 @@ const paddle = {
   dx: 0, // b/c it moves only horizontally
 };
 
+// Create brick props
+const brickInfo = {
+  w: 70,
+  h: 20,
+  padding: 10,
+  offsetX: 45, // The position of a brick in x-axis (this is the first brick and the value will be changed for another bricks, see createBrick fun)
+  offsetY: 60,
+  visible: true,
+};
+
+// Create bricks
+const bricks = [];
+for (let i = 0; i < brickRowCount; i++) {
+  bricks[i] = [];
+  for (let j = 0; j < brickColumnCount; j++) {
+    // Create x and y value for each one
+    const x = i * (brickInfo.w + brickInfo.padding) + brickInfo.offsetX;
+    const y = j * (brickInfo.h + brickInfo.padding) + brickInfo.offsetY;
+    bricks[i][j] = { x, y, ...brickInfo };
+  }
+}
+
 // Draw ball on canvas
 function drawBall() {
   ctx.beginPath();
@@ -45,19 +69,33 @@ function drawPaddle() {
   ctx.closePath();
 }
 
-// Draw every thing
-function draw() {
-  drawBall();
-  drawPaddle();
-  drawScore();
-}
-draw();
-
 // Draw score on canvas
 function drawScore() {
   ctx.font = "20px Arial";
   ctx.fillText(`Score: ${score}`, canvas.width - 100, 30);
 }
+
+// Draw bricks on canvas
+function drawBricks() {
+  bricks.forEach((column) => {
+    column.forEach((brick) => {
+      ctx.beginPath();
+      ctx.rect(brick.x, brick.y, brick.w, brick.h);
+      ctx.fillStyle = brick.visible ? "#0095dd" : "transparent"; // check if the brick is broken by the ball if is just make it transparent to hidden it
+      ctx.fill();
+      ctx.closePath();
+    });
+  });
+}
+
+// Draw everything
+function draw() {
+  drawBall();
+  drawPaddle();
+  drawScore();
+  drawBricks();
+}
+draw();
 
 // Rules and close event handler
 rulesBtn.addEventListener("click", () => {
