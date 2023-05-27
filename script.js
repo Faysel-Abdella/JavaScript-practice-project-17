@@ -1,11 +1,24 @@
 const rules = document.getElementById("rules");
 const rulesBtn = document.getElementById("rules-btn");
 const closeBtn = document.getElementById("close-btn");
+const gameOver = document.getElementById("game-over");
+const scoreCon = document.getElementById("score");
+
+const highTxt = scoreCon.firstElementChild;
+const prevTxt = scoreCon.firstElementChild.nextElementSibling;
+
+const playBtn = document.getElementById("play-btn");
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d"); // convention to use ctx
 
 let score = 0;
+
+let highScore = JSON.parse(localStorage.getItem("high-score"))
+  ? JSON.parse(localStorage.getItem("high-score"))
+  : 0;
+let prevScore = 0;
+
 const brickRowCount = 9;
 const brickColumnCount = 5;
 
@@ -104,8 +117,10 @@ function movePaddle() {
 
 // Move ball on canvas
 function moveBall() {
-  ball.x += ball.dx;
-  ball.y += ball.dy;
+  if (!gameOver.classList.contains("show")) {
+    ball.x += ball.dx;
+    ball.y += ball.dy;
+  }
 
   // Wall collision (Right and left)
   if (ball.x + ball.size > canvas.width || ball.x - ball.size < 0) {
@@ -148,18 +163,36 @@ function moveBall() {
   // Hiit bottom wll - Lose
   if (ball.y + ball.size > canvas.height) {
     showAllBricks();
+    showGameOver();
 
     score = 0;
   }
 }
 
+console.log(highScore);
+
 // Increarse score
 function increaseScore() {
   score++;
+  prevScore = score;
+  if (score > highScore) {
+    localStorage.setItem("high-score", JSON.stringify(score));
+    highScore = JSON.parse(localStorage.getItem("high-score"));
+  }
 
   if (score % (brickRowCount * brickRowCount) === 0) {
     showAllBricks();
   }
+}
+
+// Game over message
+function showGameOver() {
+  gameOver.classList.add("show");
+  ball.x = canvas.width / 2;
+  ball.y = canvas.height / 2;
+
+  highTxt.innerText = `High Score: ${highScore}`;
+  prevTxt.innerText = `Prev Score: ${prevScore}`;
 }
 
 // Make all bricks appear
@@ -225,4 +258,9 @@ rulesBtn.addEventListener("click", () => {
 });
 closeBtn.addEventListener("click", () => {
   rules.classList.remove("show");
+});
+
+// Play agin button
+playBtn.addEventListener("click", () => {
+  gameOver.classList.remove("show");
 });

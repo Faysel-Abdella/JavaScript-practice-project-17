@@ -69,3 +69,49 @@ canvas {
 .rules.show {
   transform: translateX(0);
 }
+
+/* Game over message */
+.game-over {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  transition: opacity 0.2s ease-in;
+}
+
+.game-over.show {
+  opacity: 1;
+}
+.game-over .end-txt {
+  margin: 5px;
+  font-size: 36px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.score p {
+  margin: 5px;
+  font-size: 20px;
+  color: #fff;
+}
+
+.play-btn {
+  cursor: pointer;
+  border: 0;
+  margin: 10px;
+  padding: 10px;
+  background-color: #0095dd;
+  border-radius: 8px;
+  font-size: 20px;
+}
+
+.play-btn:focus {
+  outline: 0;
+}
